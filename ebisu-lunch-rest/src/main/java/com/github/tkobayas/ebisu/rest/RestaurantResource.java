@@ -48,7 +48,8 @@ import com.github.tkobayas.ebisu.service.RestaurantService;
 /**
  * JAX-RS Example
  * <p/>
- * This class produces a RESTful service to read/write the contents of the restaurants table.
+ * This class produces a RESTful service to read/write the contents of the
+ * restaurants table.
  */
 @Path("/restaurants")
 @RequestScoped
@@ -76,6 +77,7 @@ public class RestaurantResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Restaurant lookupRestaurantById(@PathParam("id") long id) {
         Restaurant restaurant = service.findById(id);
+        System.out.println(restaurant);
         if (restaurant == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
@@ -83,8 +85,9 @@ public class RestaurantResource {
     }
 
     /**
-     * Creates a new restaurant from the values provided. Performs validation, and will return a JAX-RS response with either 200 ok,
-     * or with a map of fields, and related errors.
+     * Creates a new restaurant from the values provided. Performs validation,
+     * and will return a JAX-RS response with either 200 ok, or with a map of
+     * fields, and related errors.
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -121,17 +124,23 @@ public class RestaurantResource {
 
     /**
      * <p>
-     * Validates the given Restaurant variable and throws validation exceptions based on the type of error. If the error is standard
-     * bean validation errors then it will throw a ConstraintValidationException with the set of the constraints violated.
+     * Validates the given Restaurant variable and throws validation exceptions
+     * based on the type of error. If the error is standard bean validation
+     * errors then it will throw a ConstraintValidationException with the set of
+     * the constraints violated.
      * </p>
      * <p>
-     * If the error is caused because an existing b with the same name is registered it throws a regular validation
-     * exception so that it can be interpreted separately.
+     * If the error is caused because an existing b with the same name is
+     * registered it throws a regular validation exception so that it can be
+     * interpreted separately.
      * </p>
      * 
-     * @param restaurant Restaurant to be validated
-     * @throws ConstraintViolationException If Bean Validation errors exist
-     * @throws ValidationException If restaurant with the same num already exists
+     * @param restaurant
+     *            Restaurant to be validated
+     * @throws ConstraintViolationException
+     *             If Bean Validation errors exist
+     * @throws ValidationException
+     *             If restaurant with the same num already exists
      */
     private void validateRestaurant(Restaurant restaurant) throws ConstraintViolationException, ValidationException {
         // Create a bean validator and check for issues.
@@ -148,10 +157,12 @@ public class RestaurantResource {
     }
 
     /**
-     * Creates a JAX-RS "Bad Request" response including a map of all violation fields, and their message. This can then be used
-     * by clients to show violations.
+     * Creates a JAX-RS "Bad Request" response including a map of all violation
+     * fields, and their message. This can then be used by clients to show
+     * violations.
      * 
-     * @param violations A set of violations that needs to be reported
+     * @param violations
+     *            A set of violations that needs to be reported
      * @return JAX-RS response containing all violations
      */
     private Response.ResponseBuilder createViolationResponse(Set<ConstraintViolation<?>> violations) {
@@ -167,10 +178,13 @@ public class RestaurantResource {
     }
 
     /**
-     * Checks if a restaurant with the same name is already registered. This is the only way to easily capture the
-     * "@UniqueConstraint(columnNames = "name")" constraint from the Restaurant class.
+     * Checks if a restaurant with the same name is already registered. This is
+     * the only way to easily capture the
+     * "@UniqueConstraint(columnNames = "name")" constraint from the Restaurant
+     * class.
      * 
-     * @param num The name to check
+     * @param num
+     *            The name to check
      * @return True if the name already exists, and false otherwise
      */
     public boolean nameAlreadyExists(String name) {

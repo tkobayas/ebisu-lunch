@@ -2,42 +2,29 @@ package com.github.tkobayas.ebisu.util;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStreamReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Scraper {
 
     public static void main(String[] args) throws Exception {
+    	
+    	int id = 100;
         
-        String regex = ".*かいけつゾロリシリーズ(\\d+).*target=\"_blank\">(.*)</a></p></div>";
-        Pattern p = Pattern.compile(regex);
-
-
-        
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("zorori.html"), "Shift_JIS"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("work/fromMojo.xml"), "UTF-8"));
         while (br.ready()) {
-            
-            int num;
-            String title;
-            
+
             String line = br.readLine();
-            if (!line.contains("series_restaurant")) {
+            if (!line.contains("<li>")) {
                 continue;
             }
             
-            Matcher m = p.matcher(line);
-            if (m.find()){
-               num = Integer.parseInt(m.group(1));
-               String value = m.group(2);
-               title = value.replace("<br />", "");
-            } else {
-                continue;
+            String name = br.readLine().trim();
+            if (name.equals("</ul>") || name.equals("</li>")) {
+            	continue;
             }
             
-            System.out.println("insert into Restaurant (id, num, title, owned, read) values ("
-                + (num-1) + ", " + num + ", '" + title + "', true, true)");
+            System.out.println("insert into Restaurant (id, area, name) values ("
+                + (id++) + ", 'EAST', '" + name + "')");
         }
         br.close();
     }

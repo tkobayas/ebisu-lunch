@@ -164,4 +164,4 @@ insert into Restaurant_Tag (restaurant_id, tags_id) values (180, 7)
 insert into Restaurant_Tag (restaurant_id, tags_id) values (181, 7)
 insert into Restaurant_Tag (restaurant_id, tags_id) values (182, 7)
 
-ALTER SEQUENCE hibernate_sequence RESTART WITH 500;
+ALTER SEQUENCE hibernate_sequence RESTART WITH 100;

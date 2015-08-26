@@ -17,13 +17,16 @@
 package com.github.tkobayas.ebisu.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -39,16 +42,17 @@ public class Restaurant implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-    
+
     @NotNull
     @Size(min = 1, max = 50)
     private String name;
-    
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private Area area;
 
-    private Set<String> tags;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Tag> tags = new HashSet<Tag>();
 
     public Long getId() {
         return id;
@@ -59,30 +63,34 @@ public class Restaurant implements Serializable {
     }
 
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Area getArea() {
-		return area;
-	}
+    public Area getArea() {
+        return area;
+    }
 
-	public void setArea(Area area) {
-		this.area = area;
-	}
+    public void setArea(Area area) {
+        this.area = area;
+    }
 
-	public Set<String> getTags() {
-		return tags;
-	}
+    public Set<Tag> getTags() {
+        return tags;
+    }
 
-	public void setTags(Set<String> tags) {
-		this.tags = tags;
-	}
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
 
-	@Override
+    public void addTag(Tag tag) {
+        this.tags.add(tag);
+    }
+
+    @Override
     public String toString() {
         return "Restaurant [id=" + id + ", name=" + name + ", area=" + area + ", tags=" + tags + "]";
     }

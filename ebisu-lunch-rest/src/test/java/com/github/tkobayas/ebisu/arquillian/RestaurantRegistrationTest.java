@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.tkobayas.ebisu.test;
+package com.github.tkobayas.ebisu.arquillian;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -26,19 +26,22 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.github.tkobayas.ebisu.model.Area;
 import com.github.tkobayas.ebisu.model.Restaurant;
+import com.github.tkobayas.ebisu.model.Tag;
 import com.github.tkobayas.ebisu.service.RestaurantService;
 
 @RunWith(Arquillian.class)
 public class RestaurantRegistrationTest {
     @Deployment
     public static Archive<?> createTestArchive() {
-        return ShrinkWrap.create(WebArchive.class, "test.war")
-                .addClasses(Restaurant.class, RestaurantService.class)
+        return ShrinkWrap.create(WebArchive.class, "ebisu-lunch-rest.war")
+                .addClasses(Restaurant.class, RestaurantService.class, Tag.class, Area.class)
+                // .addAsResource("import.sql")
                 .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 // Deploy our test datasource
@@ -46,15 +49,23 @@ public class RestaurantRegistrationTest {
     }
 
     @Inject
-    RestaurantService restaurantRegistration;
+    RestaurantService restaurantService;
 
     @Test
+    @Ignore
     public void testRegister() throws Exception {
-        Restaurant newRestaurant = new Restaurant();
-        newRestaurant.setName("ポカポカ");
-        newRestaurant.setArea(Area.EAST);
-        restaurantRegistration.register(newRestaurant);
-        assertNotNull(newRestaurant.getId());
-    }
+        Tag tag1 = new Tag("イタリアンX");
+        restaurantService.register(tag1);
+        Tag tag2 = new Tag("エスプレッソX");
+        restaurantService.register(tag2);
 
+        Restaurant newRestaurant = new Restaurant();
+        newRestaurant.setName("ポカポカX");
+        newRestaurant.setArea(Area.EAST);
+        newRestaurant.addTag(tag1);
+        newRestaurant.addTag(restaurantService.findTagByValue("エスプレッソX"));
+        restaurantService.register(newRestaurant);
+        assertNotNull(newRestaurant.getId());
+        System.out.println(newRestaurant);
+    }
 }

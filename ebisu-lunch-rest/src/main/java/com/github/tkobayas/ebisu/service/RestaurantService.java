@@ -16,7 +16,6 @@
  */
 package com.github.tkobayas.ebisu.service;
 
-
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -30,42 +29,58 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.tkobayas.ebisu.model.Restaurant;
+import com.github.tkobayas.ebisu.model.Tag;
 
 @Stateless
 public class RestaurantService {
 
-    private Logger log = LoggerFactory.getLogger(RestaurantService.class);
+	private Logger log = LoggerFactory.getLogger(RestaurantService.class);
 
-    @PersistenceContext
-    private EntityManager em;
+	@PersistenceContext
+	private EntityManager em;
 
-    public void register(Restaurant restaurant) throws Exception {
-        log.info("Registering " + restaurant);
-        em.persist(restaurant);
-    }
-    
-    public void update(Restaurant restaurant) throws Exception {
-        log.info("Updating " + restaurant);
-        em.merge(restaurant);
-    }
-    
-    public Restaurant findById(Long id) {
-        return em.find(Restaurant.class, id);
-    }
+	public void register(Tag tag) throws Exception {
+		log.info("Registering " + tag);
+		em.persist(tag);
+	}
 
-    public Restaurant findByName(String name) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Restaurant> criteria = cb.createQuery(Restaurant.class);
-        Root<Restaurant> restaurant = criteria.from(Restaurant.class);
-        criteria.select(restaurant).where(cb.equal(restaurant.get("name"), name));
-        return em.createQuery(criteria).getSingleResult();
-    }
+	public Tag findTagByValue(String value) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Tag> criteria = cb.createQuery(Tag.class);
+		Root<Tag> tag = criteria.from(Tag.class);
+		criteria.select(tag).where(
+				cb.equal(tag.get("value"), value));
+		return em.createQuery(criteria).getSingleResult();
+	}
 
-    public List<Restaurant> findAllOrderedByArea() {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Restaurant> criteria = cb.createQuery(Restaurant.class);
-        Root<Restaurant> restaurant = criteria.from(Restaurant.class);
-        criteria.select(restaurant).orderBy(cb.asc(restaurant.get("area")));
-        return em.createQuery(criteria).getResultList();
-    }
+	public void register(Restaurant restaurant) throws Exception {
+		log.info("Registering " + restaurant);
+		em.persist(restaurant);
+	}
+
+	public void update(Restaurant restaurant) throws Exception {
+		log.info("Updating " + restaurant);
+		em.merge(restaurant);
+	}
+
+	public Restaurant findById(Long id) {
+		return em.find(Restaurant.class, id);
+	}
+
+	public Restaurant findByName(String name) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Restaurant> criteria = cb.createQuery(Restaurant.class);
+		Root<Restaurant> restaurant = criteria.from(Restaurant.class);
+		criteria.select(restaurant).where(
+				cb.equal(restaurant.get("name"), name));
+		return em.createQuery(criteria).getSingleResult();
+	}
+
+	public List<Restaurant> findAllOrderedByArea() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Restaurant> criteria = cb.createQuery(Restaurant.class);
+		Root<Restaurant> restaurant = criteria.from(Restaurant.class);
+		criteria.select(restaurant).orderBy(cb.asc(restaurant.get("area")));
+		return em.createQuery(criteria).getResultList();
+	}
 }
