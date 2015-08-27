@@ -36,7 +36,7 @@ import com.github.tkobayas.ebisu.model.Tag;
 import com.github.tkobayas.ebisu.service.RestaurantService;
 
 @RunWith(Arquillian.class)
-public class RestaurantRegistrationTest {
+public class RestaurantServiceTest {
     @Deployment
     public static Archive<?> createTestArchive() {
         return ShrinkWrap.create(WebArchive.class, "ebisu-lunch-rest.war")
